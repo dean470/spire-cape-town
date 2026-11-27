@@ -49,6 +49,7 @@
             <li><a href="#plans"><strong>Floor plans</strong><span>Every floor, 1 to 18</span></a></li>
             <li><a href="#views"><strong>Floor views</strong><span>The 360° view from every floor</span></a></li>
             <li><a href="#prices"><strong>Price list</strong><span>All 73 apartments</span></a></li>
+            <li><a href="#rents"><strong>Rental estimates</strong><span>Long-term rent today and in 2028</span></a></li>
           </ul>
         </li>
         <li class="has-menu" data-group="investment">
@@ -342,6 +343,8 @@
             <th class="num">Balcony m²</th>
             <th class="num">Price</th>
             <th class="num">Est. levy / month</th>
+            <th class="num">Rent today</th>
+            <th class="num">Rent 2028</th>
             <th><span class="sr-only">Layout</span></th>
           </tr>
         </thead>
@@ -349,7 +352,23 @@
       </table>
     </div>
     <div class="table-more"><button class="btn btn-line" id="showMore" type="button"></button></div>
-    <p class="note">Areas are approximate and subject to final survey. Levies are initial estimates and exclude rates. Prices are subject to change without notice and to availability; the signed sale agreement prevails. E&amp;OE.</p>
+    <h3 class="rent-head" id="rents">Long-term rental estimates</h3>
+    <p class="intro">Estimated monthly rent for a long-term letting, by apartment type and floor: today, and projected for 2028, rounded up to the nearest R100. Each apartment's figures also appear in the price list above.</p>
+    <div class="table-scroll">
+      <table class="price-table rent-table" id="rentTable">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="num">Units</th>
+            <th class="num">Size m² incl. balcony</th>
+            <th class="num">Rent / month today</th>
+            <th class="num">Rent / month 2028</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">Areas are approximate and subject to final survey. Levies are initial estimates and exclude rates. Rental figures are estimates, not a guarantee of income, and actual rents depend on the market at the time of letting. Prices are subject to change without notice and to availability; the signed sale agreement prevails. E&amp;OE.</p>
   </div>
 </section>
 

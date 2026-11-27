@@ -65,6 +65,8 @@
             "<div><dt>Internal area</dt><dd>" + u.size + " m²</dd></div>" +
             "<div><dt>" + (u.type === "Penthouse" ? "Terrace" : "Balcony") + "</dt><dd>" + (u.balcony >= 1 ? u.balcony + " m²" : "Juliet") + "</dd></div>" +
             "<div><dt>Est. levy / month</dt><dd>" + rand(u.levy) + "</dd></div>" +
+            "<div><dt>Long-term rent today</dt><dd>" + rand(u.rentNow) + " / month</dd></div>" +
+            "<div><dt>Long-term rent 2028</dt><dd>" + rand(u.rent2028) + " / month</dd></div>" +
             "<div><dt>UDZ year 1 deduction</dt><dd>" + rand(u.price * 0.55 * 0.2) + "</dd></div>" +
           "</dl>" +
           '<p class="um-tax">The UDZ figure is 20% of 55% of the price, for investors who qualify for the allowance. See Investment.</p>' +
@@ -123,6 +125,8 @@
           tile(u.type === "Penthouse" ? "Terrace" : "Balcony", outside ? outside + " m²" : "Juliet") +
           tile("Total", (u.size + outside) + " m²") +
           tile("Est. levy / month", rand(u.levy)) +
+          tile("Rent today / month", rand(u.rentNow)) +
+          tile("Rent 2028 / month", rand(u.rent2028)) +
           tile("Price per m²", rand(u.price / u.size)) +
           tile("UDZ year 1", rand(u.price * 0.55 * 0.2)) +
         "</dl>" + perchLine(u) +
@@ -241,6 +245,8 @@
         tile(u.type === "Penthouse" ? "Terrace" : "Balcony", outside ? outside + " m²" : "Juliet") +
         tile("Total", (u.size + outside) + " m²") +
         tile("Est. levy / month", rand(u.levy)) +
+        tile("Rent today / month", rand(u.rentNow)) +
+        tile("Rent 2028 / month", rand(u.rent2028)) +
       "</dl>" +
       '<div class="up-actions">' +
         '<button class="btn" type="button" data-layout="' + u.unit + '">View unit layout</button>' +
@@ -292,6 +298,7 @@
         '<td class="unit">' + u.unit + "</td><td>" + ordinal(u.floor) + "</td><td>" + swatch(u) + typeLabel[u.type] + "</td>" +
         '<td class="num">' + u.size + '</td><td class="num">' + (u.balcony >= 1 ? u.balcony : "Juliet") + "</td>" +
         '<td class="num price">' + rand(u.price) + '</td><td class="num">' + rand(u.levy) + "</td>" +
+        '<td class="num">' + rand(u.rentNow) + '</td><td class="num">' + rand(u.rent2028) + "</td>" +
         '<td class="num"><button class="row-link" aria-label="View layout of unit ' + u.unit + '">Layout</button></td></tr>';
     }).join("");
   }
@@ -315,6 +322,13 @@
     fType.value = a.dataset.filter; fFloor.value = "All";
     renderTable();
   });
+
+  // ---------- Long-term rental estimates by category
+  var rentBody = $("#rentTable tbody");
+  if (rentBody && window.SPIRE_RENT) rentBody.innerHTML = window.SPIRE_RENT.rows.map(function (r) {
+    return "<tr><td>" + r.label + '</td><td class="num">' + r.units + '</td><td class="num">' + r.size +
+      '</td><td class="num">' + rand(r.now) + '</td><td class="num price">' + rand(r.r2028) + "</td></tr>";
+  }).join("");
 
   // ---------- Figures derived from the price list
   if (units.length) {

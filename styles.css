@@ -219,7 +219,7 @@ select { appearance: none; -webkit-appearance: none; font-family: var(--sans); f
 select:hover, select:focus { border-color: var(--red); outline: 0; }
 .result-count { margin: 0 0 12px auto; font-size: .84rem; color: var(--muted); }
 .table-scroll { position: relative; overflow-x: auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--ink); }
-.price-table { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 760px; font-variant-numeric: tabular-nums; }
+.price-table { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 900px; font-variant-numeric: tabular-nums; }
 .price-table th { text-align: left; font-family: var(--blair); font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; color: var(--muted); padding: 18px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .price-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .price-table tbody tr:last-child td { border-bottom: 0; }
@@ -550,3 +550,7 @@ button.arrow-link { align-self: flex-start; background: none; border: 0; border-
 @media (max-width: 760px) {
   .view-frame { aspect-ratio: 4 / 5; }
 }
+
+/* ---------- Long-term rental estimates */
+.rent-head { font-family: var(--serif); font-weight: 300; font-size: 1.6rem; margin: 64px 0 10px; }
+.rent-table { min-width: 620px; }
