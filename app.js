@@ -31,6 +31,8 @@
   modal.addEventListener("click", function (e) {
     if (e.target === modal || e.target.closest(".modal-close")) closeModal();
   });
+  // An asterisk link inside the unit pop-up closes it before jumping to the explanation
+  document.addEventListener("click", function (e) { if (e.target.closest("a.ast") && !modal.hidden) closeModal(); });
   // Buttons anywhere on the page that act on one apartment
   document.addEventListener("click", function (e) {
     var t = e.target.closest("[data-enquire],[data-layout],[data-show]");
@@ -65,11 +67,11 @@
             "<div><dt>Internal area</dt><dd>" + u.size + " m²</dd></div>" +
             "<div><dt>" + (u.type === "Penthouse" ? "Terrace" : "Balcony") + "</dt><dd>" + (u.balcony >= 1 ? u.balcony + " m²" : "Juliet") + "</dd></div>" +
             "<div><dt>Est. levy / month</dt><dd>" + rand(u.levy) + "</dd></div>" +
-            "<div><dt>Long-term rent today</dt><dd>" + rand(u.rentNow) + " / month</dd></div>" +
-            "<div><dt>Long-term rent 2028</dt><dd>" + rand(u.rent2028) + " / month</dd></div>" +
-            "<div><dt>UDZ year 1 deduction</dt><dd>" + rand(u.price * 0.55 * 0.2) + "</dd></div>" +
+            "<div><dt>Rent / month today</dt><dd>" + rand(u.rentNow) + "</dd></div>" +
+            "<div><dt>Rent / month 2028</dt><dd>" + rand(u.rent2028) + "</dd></div>" +
+            '<div><dt>UDZ year 1 deduction<a class="ast" href="#udz-figure" aria-label="How the UDZ figure is worked out">*</a></dt><dd>' + rand(u.price * 0.55 * 0.2) + "</dd></div>" +
           "</dl>" +
-          '<p class="um-tax">The UDZ figure is 20% of 55% of the price, for investors who qualify for the allowance. See Investment.</p>' +
+          '<p class="um-tax"><a class="ast" href="#udz-figure">* How the UDZ figure is worked out</a></p>' +
           '<button class="btn" data-enquire="' + u.unit + '">Enquire about ' + u.unit + "</button>" +
           '<button class="row-link um-show" type="button" data-show="' + u.unit + '">Show on floor plan</button>' +
         "</div>" +
@@ -127,8 +129,7 @@
           tile("Est. levy / month", rand(u.levy)) +
           tile("Rent today / month", rand(u.rentNow)) +
           tile("Rent 2028 / month", rand(u.rent2028)) +
-          tile("Price per m²", rand(u.price / u.size)) +
-          tile("UDZ year 1", rand(u.price * 0.55 * 0.2)) +
+          tile('UDZ year 1<a class="ast" href="#udz-figure" aria-label="How the UDZ figure is worked out">*</a>', rand(u.price * 0.55 * 0.2)) +
         "</dl>" + perchLine(u) +
         '<div class="up-actions">' +
           '<button class="btn" type="button" data-layout="' + u.unit + '">View unit layout</button>' +
@@ -136,18 +137,13 @@
           '<button class="row-link" type="button" data-view="' + u.floor + '">View from this floor</button>' +
           '<button class="row-link" type="button" data-enquire="' + u.unit + '">Enquire about this unit</button>' +
         "</div>" +
-        (pinned === +n ? '<p class="ex-hint">Selected. Hover over another apartment, or click this one again to release it.</p>' : "");
+        (pinned === +n ? '<p class="ex-hint">Selected. Click another apartment to switch, or click this one again to release it.</p>' :
+          '<p class="ex-hint">Click the apartment to keep these details on screen.</p>');
     }
-    function clear() {
-      if (pinned) { show(pinned); return; }
-      stage.classList.remove("active");
-      clipPath.setAttribute("d", ""); outline.setAttribute("d", "");
-      $$(".ex-u.on", group).forEach(function (p) { p.classList.remove("on"); });
-      floorTag.textContent = "";
-    }
-    group.addEventListener("mouseover", function (e) { var p = e.target.closest(".ex-u"); if (p) show(p.dataset.unit); });
-    group.addEventListener("mouseleave", clear);
-    group.addEventListener("focusin", function (e) { var p = e.target.closest(".ex-u"); if (p) show(p.dataset.unit); });
+    // Hovering previews an apartment only while none is selected. Once one is clicked, its details
+    // stay put until another apartment is clicked, and the last preview stays when the pointer leaves.
+    group.addEventListener("mouseover", function (e) { var p = e.target.closest(".ex-u"); if (p && !pinned) show(p.dataset.unit); });
+    group.addEventListener("focusin", function (e) { var p = e.target.closest(".ex-u"); if (p && !pinned) show(p.dataset.unit); });
     function toggle(n) {
       n = +n;
       pinned = pinned === n ? null : n;
@@ -216,8 +212,11 @@
     planTitle.textContent = ordinal(f) + " floor" + (floorNote[f] ? " · " + floorNote[f] : "");
     var shapes = plans.floors[f] || {}, onFloor = unitsOn(f);
     fills.innerHTML = onFloor.map(function (u) {
-      if (!shapes[u.unit]) return "";
-      return '<path class="u ' + typeClass[u.type] + '" d="' + shapes[u.unit].d + '" fill-rule="evenodd" data-unit="' + u.unit +
+      var s = shapes[u.unit];
+      if (!s) return "";
+      // The balcony or terrace is drawn as a lighter part of the same apartment and selects it too
+      return (s.b ? '<path class="u u-bal ' + typeClass[u.type] + '" d="' + s.b + '" data-unit="' + u.unit + '" aria-hidden="true"></path>' : "") +
+        '<path class="u ' + typeClass[u.type] + '" d="' + s.d + '" fill-rule="evenodd" data-unit="' + u.unit +
         '" tabindex="0" role="button" aria-label="Unit ' + u.unit + ", " + typeLabel[u.type] + ", " + rand(u.price) + '"></path>';
     }).join("");
     var keep = onFloor.filter(function (u) { return u.unit === +unit; })[0];
@@ -334,6 +333,7 @@
   if (units.length) {
     var min = Math.min.apply(null, units.map(function (u) { return u.price; }));
     $("#fromPrice").textContent = "from R" + (min / 1e6).toFixed(2).replace(/0$/, "").replace(".", ",") + " million";
+    $$("[data-faq-from]").forEach(function (el) { el.textContent = "R" + (min / 1e6).toFixed(2).replace(/0$/, "").replace(".", ",") + " million"; });
     $("#exPrice").textContent = rand(min);
     $("#exCost").textContent = rand(min * 0.55);
     $("#exY1").textContent = rand(min * 0.55 * 0.2);

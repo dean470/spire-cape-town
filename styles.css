@@ -10,10 +10,10 @@
   --stone: #EFEDEA;
   --muted: #6e6869;
   --line: #dcd7d2;
-  --t-studio: #b9a2dd;
-  --t-1bed: #f6ae4f;
-  --t-2bed: #9ccc5e;
-  --t-ph: #86b9e8;
+  --t-studio: #7fb3c8;
+  --t-1bed: #e2b868;
+  --t-2bed: #8daa7b;
+  --t-ph: #d08c9a;
   --chart-grey: #968E89;
   --blair: "Blair", "Montserrat", Arial, sans-serif;
   --serif: "Fraunces", Georgia, "Times New Roman", serif;
@@ -606,3 +606,60 @@ button.arrow-link { align-self: flex-start; background: none; border: 0; border-
 .motion .hero-in .hero-head > :nth-child(2), .motion .hero-in .hero-head > :nth-child(3) { transition-delay: .45s; }
 .motion .hero-line { transform: scaleY(0); transition: transform 1.6s cubic-bezier(.65,0,.35,1); }
 .motion .hero-in .hero-line { transform: scaleY(1); }
+
+/* ---------- Asterisk links and "from" prefixes */
+a.ast { color: var(--red); text-decoration: none; font-weight: 600; margin-left: 2px; }
+a.ast:hover { text-decoration: underline; }
+.um-tax a.ast { margin: 0; font-weight: 500; border-bottom: 1px solid currentColor; }
+.facts strong small, .steps strong small { font-size: .45em; letter-spacing: .08em; text-transform: uppercase; margin-right: .25em; vertical-align: middle; }
+#udz-figure { scroll-margin-top: calc(var(--header) + 40px); }
+
+/* Explorer: while an apartment is selected, others show a light hint on hover but do not take over */
+.ex-stage.active .ex-u:not(.on):hover { fill: rgba(255,255,255,.22); stroke: rgba(160,52,73,.6); }
+
+/* Floor plans: balconies as a lighter tint of their apartment; the selected apartment in Spire red */
+.u.u-bal { opacity: .42; }
+.u.u-bal:hover { opacity: .6; }
+.u.sel { fill: var(--red); opacity: .9; }
+.u.u-bal.sel { fill: var(--red); opacity: .45; }
+.sw.t-sel { background: var(--red); }
+
+/* Floor views: the whole floor's plan under the 360° view */
+.view-plan { margin-top: 36px; }
+.view-plan-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.view-plan-head h3 { font-family: var(--serif); font-weight: 300; font-size: 1.5rem; }
+.legend-light li { color: #d5cfd0; }
+.view-plan-canvas { position: relative; background: #fff; max-width: 760px; margin: 0 auto; padding: 0; }
+.view-plan-canvas .u { cursor: pointer; }
+.view-plan-hint { text-align: center; font-size: .85rem; color: #b9b2b3; margin: 14px 0 0; }
+
+/* Location map */
+.map-frame { position: relative; margin-top: clamp(40px, 5vw, 64px); border: 1px solid var(--line); background: #e9e7e5; aspect-ratio: 21 / 8; }
+.map-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.map-tag { position: absolute; left: 16px; bottom: 16px; margin: 0; background: var(--ink); color: #fff; padding: 12px 16px; font-size: .8rem; line-height: 1.5; pointer-events: none; box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+.map-tag strong { display: block; font-family: var(--blair); font-weight: 500; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--rose); }
+@media (max-width: 760px) { .map-frame { aspect-ratio: 4 / 5; } }
+
+/* The hero's red line starts under the header, so it never runs through the SPIRE logo */
+.home .hero-line { top: var(--header); }
+
+/* Explorer: the details panel always fits the window while it rides alongside the tower */
+@media (min-width: 961px) {
+  .ex-panel { max-height: calc(100vh - var(--header) - 48px); overflow-y: auto; overscroll-behavior: contain; }
+  .ex-panel h3 { font-size: 2rem; }
+  .ex-panel .up-stats > div { padding-block: 10px; }
+}
+
+/* ---------- FAQs */
+.faq { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); align-items: start; }
+.faq-group h3 { font-family: var(--blair); font-weight: 500; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--red); margin: 0 0 8px; padding-bottom: 14px; border-bottom: 1px solid var(--ink); }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 0; font-weight: 500; font-size: .98rem; line-height: 1.45; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; flex: none; font-family: var(--sans); font-weight: 300; font-size: 1.5rem; line-height: 1; color: var(--red); transition: transform .25s; }
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item summary:hover { color: var(--red); }
+.faq-a p { margin: 0 0 18px; color: var(--muted); font-size: .92rem; line-height: 1.7; }
+.faq-a a { color: var(--red); text-underline-offset: 3px; }
+@media (max-width: 1080px) { .faq { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .faq { grid-template-columns: 1fr; } }

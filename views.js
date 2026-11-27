@@ -27,8 +27,40 @@
     b.setAttribute("aria-label", "View from the " + ordinal(f) + " floor");
     picker.appendChild(b);
   }
+  // The whole floor's plan, under the 360° view, with every apartment coloured by type.
+  // Selecting an apartment opens its layout (the page-wide [data-layout] handler in app.js).
+  var PL = window.SPIRE_PLANS, UNITS = window.SPIRE_UNITS || [];
+  var pFills = document.getElementById("viewPlanFills"), pLabels = document.getElementById("viewPlanLabels");
+  var pImg = document.getElementById("viewPlanImage"), pTitle = document.getElementById("viewPlanTitle");
+  var TYPE = { "Studio": "t-studio", "1 Bed": "t-1bed", "2 Bed": "t-2bed", "Penthouse": "t-ph" };
+  var NAME = { "Studio": "Studio", "1 Bed": "One bedroom", "2 Bed": "Two bedroom", "Penthouse": "Penthouse" };
+  if (PL && pFills) {
+    var vb = "0 0 " + PL.size[0] + " " + PL.size[1];
+    pFills.setAttribute("viewBox", vb); pLabels.setAttribute("viewBox", vb);
+    pImg.width = PL.size[0]; pImg.height = PL.size[1];
+  }
+  function drawPlan(f) {
+    if (!PL || !pFills) return;
+    var shapes = PL.floors[f] || {};
+    var onFloor = UNITS.filter(function (u) { return u.floor === (f === 18 ? 17 : f) && shapes[u.unit]; });
+    pImg.src = "assets/plans/floor-" + (f < 10 ? "0" + f : f) + ".webp";
+    pImg.alt = ordinal(f) + " floor plan";
+    pTitle.textContent = ordinal(f) + " floor plan";
+    pFills.innerHTML = onFloor.map(function (u) {
+      var s = shapes[u.unit], label = "Unit " + u.unit + ", " + NAME[u.type] + ": view layout";
+      return (s.b ? '<path class="u u-bal ' + TYPE[u.type] + '" d="' + s.b + '" data-layout="' + u.unit + '" aria-hidden="true"></path>' : "") +
+        '<path class="u ' + TYPE[u.type] + '" d="' + s.d + '" fill-rule="evenodd" data-layout="' + u.unit +
+        '" tabindex="0" role="button" aria-label="' + label + '"><title>' + label + "</title></path>";
+    }).join("");
+    // The plans already print each unit number, so no labels are drawn over them
+  }
+  if (pFills) pFills.addEventListener("keydown", function (e) {
+    var p = e.target.closest("[data-layout]");
+    if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); p.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
+  });
   function show(f) {
     f = Math.min(18, Math.max(1, +f || 1)); current = f;
+    drawPlan(f);
     Array.prototype.forEach.call(picker.children, function (b) { b.setAttribute("aria-selected", +b.dataset.vfloor === f); });
     title.textContent = ordinal(f) + " floor · about " + String(SCENES[f][1]).replace(".", ",") + " m above the street" + (NOTE[f] ? " · " + NOTE[f] : "");
     open.href = TOUR + SCENES[f][0];
