@@ -4,26 +4,40 @@
 // 3. section headings and copy fade up from below.
 // Nothing moves for visitors who ask for reduced motion, and everything stays visible without JavaScript.
 (function () {
+  // The fixed SPIRE tab tucks away after the hero on narrower desktops, where it would cover content
+  var tallHero = document.querySelector(".hero-tall");
+  if (tallHero) {
+    var past = function () { document.body.classList.toggle("past-hero", window.scrollY > tallHero.offsetHeight - 120); };
+    window.addEventListener("scroll", past, { passive: true }); past();
+  }
   if (!window.matchMedia || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var root = document.documentElement;
   root.classList.add("motion");
 
-  // 1. Hero
-  var hero = document.querySelector(".hero"), copy = hero && hero.querySelector(".hero-copy");
-  var media = hero && hero.querySelector(".hero-media img");
+  // 1. Hero: the headline drifts down the tall render as the page scrolls, easing behind the
+  // scroll like the landing page's GSAP "scrub: 1", and stops short of the street.
+  var hero = document.querySelector(".hero"), head = document.getElementById("heroHead");
   if (hero) requestAnimationFrame(function () { requestAnimationFrame(function () { hero.classList.add("hero-in"); }); });
-  if (copy) {
-    var ticking = false, wide = window.matchMedia("(min-width: 961px)");
-    function drift() {
-      ticking = false;
-      var h = hero.offsetHeight, p = Math.min(1, Math.max(0, window.scrollY / h));
-      if (!wide.matches) p = 0;              // stacked phone layout: no drift
-      copy.style.transform = "translate3d(0," + (p * h * 0.32).toFixed(1) + "px,0)";
-      copy.style.opacity = (1 - p * 0.9).toFixed(3);
-      if (media) media.style.transform = "translate3d(0," + (p * h * 0.12).toFixed(1) + "px,0) scale(1.06)";
+  if (head) {
+    var overlay = window.matchMedia("(min-width: 761px)"), cur = 0, running = false;
+    function target() {
+      if (!overlay.matches) return 0;
+      var room = hero.offsetHeight - head.offsetTop - head.offsetHeight - 40;
+      // Measured off the landing-page recording: the headline travels about 0.78 px for every
+      // pixel scrolled, so the price line is still on screen when the street comes into view.
+      return Math.max(0, Math.min(room, window.scrollY * 0.78));
     }
-    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(drift); } }, { passive: true });
-    drift();
+    function step() {
+      var t = target();
+      cur += (t - cur) * 0.08;
+      if (Math.abs(t - cur) < 0.3) cur = t;
+      head.style.transform = "translate3d(0," + cur.toFixed(1) + "px,0)";
+      if (cur !== t) requestAnimationFrame(step); else running = false;
+    }
+    function kick() { if (!running) { running = true; requestAnimationFrame(step); } }
+    window.addEventListener("scroll", kick, { passive: true });
+    window.addEventListener("resize", kick);
+    kick();
   }
 
   // 2 and 3. Reveals

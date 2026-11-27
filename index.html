@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="home">
 
 <a class="skip" href="#overview">Skip to content</a>
 
@@ -73,19 +73,25 @@
   </div>
 </header>
 
-<section class="hero">
-  <div class="hero-copy">
-    <p class="label">Plein &amp; Spin · Cape Town CBD</p>
-    <h1>The pinnacle of <em>city living</em></h1>
-    <p class="lead">Seventy-three considered apartments in an 18-storey landmark by Signatura, designed by Robert Silke &amp; Partners.</p>
-    <p class="hero-price"><span>Priced</span> <strong id="fromPrice">from R1,45 million</strong></p>
+<section class="hero hero-tall" aria-label="Spire">
+  <img class="hero-img" src="assets/hero.jpg" width="1500" height="1562" alt="Artist's impression of Spire on the corner of Plein and Spin Streets at sunset">
+  <div class="hero-line" aria-hidden="true"></div>
+  <div class="hero-head" id="heroHead">
+    <p class="hero-kicker">Plein &amp; Spin · Cape Town CBD</p>
+    <h1>The pinnacle<br>of city<br>living</h1>
+    <p class="hero-from"><span id="fromPrice">from R1,45 million</span>.</p>
+  </div>
+</section>
+<section class="hero-band">
+  <div class="wrap">
+    <p>Welcome to Spire: Signatura's 18-storey landmark on the corner of Plein and Spin, designed by Robert Silke &amp; Partners. Seventy-three considered apartments in the Cape Town CBD, as striking to look at as they are to own.</p>
     <div class="hero-cta">
       <a class="btn" href="#prices">View price list</a>
       <a class="arrow-link" href="#plans">Explore floor plans</a>
     </div>
   </div>
-  <div class="hero-media"><img src="assets/hero.jpg" alt="Artist's impression of Spire on the corner of Plein and Spin Streets at sunset"></div>
 </section>
+<a class="spire-tab" href="#top" aria-label="Spire, back to top"><img src="assets/spire-tab.svg" alt="" width="68" height="307"></a>
 
 <section class="facts" aria-label="Key facts">
   <div><strong>73</strong><span>Apartments</span></div>
