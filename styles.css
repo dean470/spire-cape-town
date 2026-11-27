@@ -663,3 +663,15 @@ a.ast:hover { text-decoration: underline; }
 .faq-a a { color: var(--red); text-underline-offset: 3px; }
 @media (max-width: 1080px) { .faq { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) { .faq { grid-template-columns: 1fr; } }
+
+/* ---------- Image labels (what each render shows) */
+.feature figure button, .gallery figure button, .framed { position: relative; }
+.img-tag { position: absolute; left: 14px; top: 14px; z-index: 2; pointer-events: none; background: var(--ink); color: #fff;
+  font-family: var(--blair); font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; line-height: 1; padding: 9px 12px 8px; }
+.framed .img-tag { left: 42px; }
+.hero-tag { left: auto; right: 4.4vw; top: auto; bottom: 20px; background: rgba(35,31,32,.82); }
+@media (max-width: 760px) {
+  .img-tag { left: 10px; top: 10px; font-size: .52rem; padding: 8px 10px 7px; }
+  .framed .img-tag { left: 38px; }
+  .hero-tag { right: 10px; bottom: 10px; }
+}
